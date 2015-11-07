@@ -12,6 +12,7 @@ import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.TwitterClient;
 import com.codepath.apps.mysimpletweets.adapters.TweetsArrayAdapter;
 import com.codepath.apps.mysimpletweets.models.Tweet;
+import com.codepath.apps.mysimpletweets.utils.EndlessScrollListener;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -37,8 +38,26 @@ public class TimelineActivity extends AppCompatActivity {
         adapter = new TweetsArrayAdapter(this, tweets);
         lvTweets.setAdapter(adapter);
 
+        lvTweets.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                customLoadMoreDataFromApi(page);
+                return true;
+            }
+        });
+
         client = TwitterApplication.getRestClient();
         populateTimeline();
+    }
+
+    // Append more data into the adapter
+    public void customLoadMoreDataFromApi(int offset) {
+      // This method probably sends out a network request and appends new data items to your adapter.
+      // Use the offset value and add it as a parameter to your API request to retrieve paginated data.
+      // Deserialize API response and then construct new objects to append to the adapteri
+      if (client.getNumberOfPagesLoaded() <= offset) {
+          populateTimeline();
+      }
     }
 
     // Send an API request to Twitter
@@ -49,6 +68,7 @@ public class TimelineActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 adapter.addAll(Tweet.fromJSONArray(response));
                 adapter.notifyDataSetChanged();
+                client.updateTweetsCount();
             }
 
             @Override

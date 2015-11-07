@@ -25,4 +25,8 @@ public class User {
         }
         return u;
     }
+
+    public String getScreeName() {
+        return "@" + this.screenName;
+    }
 }
