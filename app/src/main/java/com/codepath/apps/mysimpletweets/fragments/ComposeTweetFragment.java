@@ -64,6 +64,7 @@ public class ComposeTweetFragment extends DialogFragment {
             }
         });
 
+        populateDialog();
         return view;
     }
 
@@ -73,9 +74,11 @@ public class ComposeTweetFragment extends DialogFragment {
 
     private void populateDialog() {
         ImageView ivComposeProfileImage = (ImageView) view.findViewById(R.id.ivComposeProfileImage);
-        TextView tvComposeTweetBody = (TextView) view.findViewById(R.id.tvScreeName);
+        TextView tvScreenName = (TextView) view.findViewById(R.id.tvScreeName);
+        TextView tvUsername = (TextView) view.findViewById(R.id.tvUsername);
 
-        tvComposeTweetBody.setText(args.getString("screen_name"));
+        tvScreenName.setText(args.getString("screen_name"));
+        tvUsername.setText(args.getString("username"));
         Picasso.with(getActivity()).load(args.getString("image_url")).into(ivComposeProfileImage);
     }
 

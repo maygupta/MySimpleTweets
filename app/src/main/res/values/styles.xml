@@ -10,8 +10,6 @@
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:dialogTheme">@style/AppDialogTheme</item>
-        <item name="android:alertDialogTheme">@style/AppAlertTheme</item>
         <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
 

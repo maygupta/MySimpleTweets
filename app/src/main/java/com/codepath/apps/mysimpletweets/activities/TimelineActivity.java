@@ -31,6 +31,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class TimelineActivity extends AppCompatActivity {
     private ListView lvTweets;
     private User currentUser;
     private SwipeRefreshLayout swipeContainer;
+    private User loggedInUser;
 
 
     @Override
@@ -61,6 +63,25 @@ public class TimelineActivity extends AppCompatActivity {
 
         setupViews();
         populateTimeline();
+        populateLoggedInUser();
+    }
+
+    private void populateLoggedInUser() {
+        client.getUserTimeline(new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                try {
+                    loggedInUser = User.fromJSON(response.getJSONObject(0).getJSONObject("user"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
     }
 
     public void setupViews() {
@@ -182,8 +203,9 @@ public class TimelineActivity extends AppCompatActivity {
             FragmentManager manager = getFragmentManager();
             ComposeTweetFragment fragment = new ComposeTweetFragment();
             Bundle args = new Bundle();
-            args.putString("screen_name", getCurrentUserScreenName());
-            args.getString("image_url", getCurrentUserImageUrl());
+            args.putString("username", loggedInUser.name);
+            args.putString("screen_name", loggedInUser.getScreeName());
+            args.putString("image_url", loggedInUser.profileImageUrl);
             fragment.setArguments(args);
             fragment.setDialogResultHandler(new ComposeTweetFragment.OnDialogResultHandler() {
                 @Override
@@ -208,14 +230,6 @@ public class TimelineActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private String getCurrentUserImageUrl() {
-        return null;
-    }
-
-    private String getCurrentUserScreenName() {
-        return null;
     }
 
     private Boolean isNetworkAvailable() {

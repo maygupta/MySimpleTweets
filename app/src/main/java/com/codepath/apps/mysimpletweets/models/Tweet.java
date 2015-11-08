@@ -101,7 +101,7 @@ public class Tweet extends Model implements Serializable {
         if (splits[1].equals("minutes") || splits[1].equals("minute")) {
             compactTime = splits[0] + "m";
         } else if (splits[1].equals("seconds") || splits[1].equals("second")) {
-            compactTime = splits[0] + "m";
+            compactTime = splits[0] + "s";
         } else if (splits[1].equals("hours") || splits[1].equals("hour")) {
             compactTime = splits[0] + "h";
         } else if (splits[1].equals("days") || splits[1].equals("day")) {
