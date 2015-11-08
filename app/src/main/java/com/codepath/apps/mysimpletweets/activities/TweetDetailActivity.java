@@ -1,5 +1,6 @@
 package com.codepath.apps.mysimpletweets.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -125,6 +126,10 @@ public class TweetDetailActivity extends AppCompatActivity {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Tweet replyTweet = Tweet.fromJSON(response);
+                    Intent i = new Intent();
+                    i.putExtra("tweet_reply", replyTweet);
+                    setResult(Activity.RESULT_OK, i);
                     finish();
                 }
             });

@@ -46,7 +46,7 @@ public class TimelineActivity extends AppCompatActivity {
     private User currentUser;
     private SwipeRefreshLayout swipeContainer;
     private User loggedInUser;
-
+    static final int TWEET_DETAIL_REQUEST = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     private void populateLoggedInUser() {
-        client.getUserTimeline(new JsonHttpResponseHandler(){
+        client.getUserTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 try {
@@ -117,7 +117,7 @@ public class TimelineActivity extends AppCompatActivity {
                 Tweet tweet = tweets.get(position);
                 Intent i = new Intent(TimelineActivity.this, TweetDetailActivity.class);
                 i.putExtra("tweet", tweet);
-                startActivity(i);
+                startActivityForResult(i, TWEET_DETAIL_REQUEST);
             }
         });
     }
@@ -143,6 +143,19 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
     }
+
+    protected void onActivityResult(int requestCode, int resultCode,
+             Intent data) {
+         if (requestCode == TWEET_DETAIL_REQUEST && resultCode == RESULT_OK) {
+            Tweet tweetReply = (Tweet) data.getSerializableExtra("tweet_reply");
+             if (tweetReply != null) {
+                 adapter.insert(tweetReply, 0);
+                 adapter.notifyDataSetChanged();
+                 client.incrementTweetsCount();
+             }
+         }
+    }
+
 
     // Append more data into the adapter
     public void customLoadMoreDataFromApi(int offset) {

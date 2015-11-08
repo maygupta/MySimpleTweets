@@ -1,7 +1,5 @@
 package com.codepath.apps.mysimpletweets.models;
 
-import android.text.format.DateUtils;
-
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -88,27 +86,36 @@ public class Tweet extends Model implements Serializable {
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
         sf.setLenient(true);
 
-        String relativeDate = "";
+        long dateMillis = 0;
         try {
-            long dateMillis = sf.parse(createdAt).getTime();
-            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
-                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+            dateMillis = sf.parse(createdAt).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String[] splits = relativeDate.split(" ");
-        String compactTime = "";
-        if (splits[1].equals("minutes") || splits[1].equals("minute")) {
-            compactTime = splits[0] + "m";
-        } else if (splits[1].equals("seconds") || splits[1].equals("second")) {
-            compactTime = splits[0] + "s";
-        } else if (splits[1].equals("hours") || splits[1].equals("hour")) {
-            compactTime = splits[0] + "h";
-        } else if (splits[1].equals("days") || splits[1].equals("day")) {
-            compactTime = splits[0] + "d";
+        String timePresenter = "";
+
+        long time = System.currentTimeMillis();
+        long createdAt = time - dateMillis;
+
+        int hours = (int) ((createdAt / (1000*60*60)) % 24);
+        int minutes = (int) ((createdAt / (1000*60)) % 60);
+        int seconds = (int) ((createdAt / (1000)) % 60);
+        int days = (int) (hours / 24);
+        int weeks = (int) (days / 7);
+
+        if (weeks > 0) {
+          timePresenter = weeks + "w";
+        } else if ( days > 0 ){
+            timePresenter = days + "d";
+        } else if (hours > 0) {
+            timePresenter = hours + "h";
+        } else if ( minutes > 0) {
+            timePresenter = minutes + "m";
+        } else if ( seconds > 0) {
+            timePresenter = seconds + "s";
         }
 
-        return compactTime;
+        return timePresenter;
     }
 
     public static long getLastTweetId(JSONArray response) {
