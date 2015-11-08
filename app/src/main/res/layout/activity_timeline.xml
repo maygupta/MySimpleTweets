@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:theme="@style/AppTheme"
+    android:background="@color/white"
     tools:context="com.codepath.apps.mysimpletweets.activities.TimelineActivity">
 
     <android.support.v4.widget.SwipeRefreshLayout

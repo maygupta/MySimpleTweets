@@ -34,6 +34,11 @@ public class Tweet extends Model implements Serializable {
     @Column(name = "created_at")
     public String createdAt;
 
+    public String mediaUrl;
+    public String retweetCount;
+    public String favCount;
+
+
     public Tweet() {
         super();
     }
@@ -45,6 +50,19 @@ public class Tweet extends Model implements Serializable {
             tweet.id = jsonObject.getLong("id");
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+            JSONObject entities = jsonObject.getJSONObject("entities");
+            JSONArray media;
+            try {
+                media = entities.getJSONArray("media");
+            } catch (Exception e) {
+                media = null;
+            }
+
+            if ( media != null ) {
+                tweet.mediaUrl = media.getJSONObject(0).getString("media_url");
+            }
+            tweet.retweetCount = jsonObject.getString("retweet_count");
+            tweet.favCount = jsonObject.getString("favorite_count");
             tweet.save();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -78,8 +96,19 @@ public class Tweet extends Model implements Serializable {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        String[] splits = relativeDate.split(" ");
+        String compactTime = "";
+        if (splits[1].equals("minutes") || splits[1].equals("minute")) {
+            compactTime = splits[0] + "m";
+        } else if (splits[1].equals("seconds") || splits[1].equals("second")) {
+            compactTime = splits[0] + "m";
+        } else if (splits[1].equals("hours") || splits[1].equals("hour")) {
+            compactTime = splits[0] + "h";
+        } else if (splits[1].equals("days") || splits[1].equals("day")) {
+            compactTime = splits[0] + "d";
+        }
 
-        return relativeDate;
+        return compactTime;
     }
 
     public static long getLastTweetId(JSONArray response) {

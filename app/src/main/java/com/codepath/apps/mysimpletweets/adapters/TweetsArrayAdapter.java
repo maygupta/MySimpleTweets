@@ -1,6 +1,7 @@
 package com.codepath.apps.mysimpletweets.adapters;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.models.Tweet;
+import com.codepath.apps.mysimpletweets.utils.LinkifiedTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -20,10 +22,12 @@ import java.util.List;
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
     private static class ViewHolder {
-        TextView tvTweet;
+        LinkifiedTextView tvTweet;
         TextView tvUsername;
         TextView tvScreenName;
         TextView tvTimeAgo;
+        TextView tvRTCount;
+        TextView tvFavCount;
         ImageView ivProfile;
     }
 
@@ -39,21 +43,27 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet,parent,false);
 
-            viewHolder.tvTweet = (TextView) convertView.findViewById(R.id.tvTweet);
+            viewHolder.tvTweet = (LinkifiedTextView) convertView.findViewById(R.id.tvTweet);
+
             viewHolder.tvScreenName = (TextView) convertView.findViewById(R.id.tvScreenName);
             viewHolder.tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);
             viewHolder.tvTimeAgo = (TextView) convertView.findViewById(R.id.tvTimeAgo);
+            viewHolder.tvRTCount = (TextView) convertView.findViewById(R.id.tvRTCount);
+            viewHolder.tvFavCount = (TextView) convertView.findViewById(R.id.tvFavCount);
+
             viewHolder.ivProfile = (ImageView) convertView.findViewById(R.id.ivProfile);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.tvTweet.setText(tweet.body);
+        viewHolder.tvTweet.setText(Html.fromHtml(tweet.body), TextView.BufferType.SPANNABLE);
         Picasso.with(getContext()).load(tweet.user.profileImageUrl).into(viewHolder.ivProfile);
         viewHolder.tvScreenName.setText(tweet.user.getScreeName());
         viewHolder.tvUsername.setText(tweet.user.name);
         viewHolder.tvTimeAgo.setText(tweet.getRelativeTimeAgo());
+        viewHolder.tvRTCount.setText(tweet.retweetCount);
+        viewHolder.tvFavCount.setText(tweet.favCount);
 
         return convertView;
     }

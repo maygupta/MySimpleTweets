@@ -48,16 +48,23 @@ public class TweetDetailActivity extends AppCompatActivity {
 
     private void populateDetailView(Intent intent) {
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivTweetProfileImage);
+        ImageView ivMedia= (ImageView) findViewById(R.id.ivMedia);
         TextView tvUsername = (TextView) findViewById(R.id.tvUsername);
         TextView tvScreenName = (TextView) findViewById(R.id.tvScreenName);
         TextView tvTweetBody = (TextView) findViewById(R.id.tvTweetBody);
+        TextView tvTimeAgo = (TextView) findViewById(R.id.tvTimeAgo);
         tvCharCount = (TextView) findViewById(R.id.tvCharCount);
         etReply = (EditText) findViewById(R.id.etReply);
 
         Picasso.with(this).load(tweet.user.profileImageUrl).into(ivProfileImage);
+        if (tweet.mediaUrl != null) {
+            Picasso.with(this).load(tweet.mediaUrl).into(ivMedia);
+        }
+
         tvUsername.setText(tweet.user.name);
         tvScreenName.setText(tweet.user.getScreeName());
         tvTweetBody.setText(tweet.body);
+        tvTimeAgo.setText(tweet.getRelativeTimeAgo());
         etReply.setHint("Reply to" + " " + tweet.user.name);
 
         etReply.addTextChangedListener(new TextWatcher() {

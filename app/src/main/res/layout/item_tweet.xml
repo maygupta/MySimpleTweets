@@ -6,8 +6,8 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/ivProfile"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -17,8 +17,8 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tvUsername"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:textColor="@color/black"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/ivProfile"
@@ -31,21 +31,21 @@
         android:id="@+id/tvScreenName"
         android:textSize="10dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/tvUsername"
         />
 
-    <TextView
+    <com.codepath.apps.mysimpletweets.utils.LinkifiedTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:layout_alignLeft="@+id/tvUsername"
         android:id="@+id/tvTweet"
-        android:autoLink="all"
-        android:linksClickable="true"
+        android:clickable="true"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
         android:layout_below="@+id/tvUsername"
         android:layout_toRightOf="@+id/ivProfile"
         android:layout_toEndOf="@+id/ivProfile" />
@@ -56,8 +56,44 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
         android:id="@+id/tvTimeAgo"
         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/tvRTCount"
+        android:drawableLeft="@drawable/rt"
+        android:paddingLeft="5dp"
+        android:layout_alignTop="@+id/tvRT"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/tvFavCount"
+        android:drawableLeft="@drawable/fav"
+        android:layout_alignTop="@+id/tvRTCount"
+        android:layout_toLeftOf="@+id/tvTimeAgo"
+        android:layout_toStartOf="@+id/tvTimeAgo"
+        android:layout_marginRight="42dp"
+        android:paddingLeft="5dp"
+        android:layout_marginEnd="42dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/tvRT"
+        android:drawableLeft="@drawable/reply"
+        android:layout_marginTop="47dp"
+        android:paddingLeft="5dp"
+        android:layout_below="@+id/ivProfile"
+        android:layout_toRightOf="@+id/ivProfile"
+        android:layout_toEndOf="@+id/ivProfile" />
 
 
 </RelativeLayout>

@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.codepath.apps.mysimpletweets.R;
@@ -93,7 +94,6 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Tweet tweet = tweets.get(position);
-                Bundle args = new Bundle();
                 Intent i = new Intent(TimelineActivity.this, TweetDetailActivity.class);
                 i.putExtra("tweet", tweet);
                 startActivity(i);
@@ -102,6 +102,7 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     public void fetchTimelineAsync() {
+        client.lastId = -1;
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -153,12 +154,13 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Log.d("ERROR", "Failed to get tweets homeline");
-                Log.d("ERROR", errorResponse.toString());
+                loadTweetsFromStore();
             }
         });
     }
 
     private void loadTweetsFromStore() {
+        Toast.makeText(this, "Loading from Database!!", Toast.LENGTH_SHORT).show();
         List<Tweet> queryResults = new Select().from(Tweet.class).execute();
         adapter.addAll(queryResults);
         adapter.notifyDataSetChanged();

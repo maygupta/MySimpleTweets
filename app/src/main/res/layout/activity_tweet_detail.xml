@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tvUsername"
+        android:layout_marginLeft="10dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/ivTweetProfileImage"
         android:layout_toEndOf="@+id/ivTweetProfileImage" />
@@ -25,6 +26,7 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tvScreenName"
+        android:layout_marginLeft="10dp"
         android:layout_below="@+id/tvUsername"
         android:layout_toRightOf="@+id/ivTweetProfileImage"
         android:layout_toEndOf="@+id/ivTweetProfileImage" />
@@ -57,6 +59,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tweet"
+        android:background="@color/twitter_blue"
+        android:textColor="@color/white"
         android:id="@+id/btReply"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
@@ -66,10 +70,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="140"
+        android:layout_marginRight="10dp"
         android:paddingTop="10dp"
         android:id="@+id/tvCharCount"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/btReply"
         android:layout_alignTop="@+id/btReply" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivMedia"
+        android:layout_below="@+id/tvTweetBody"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="41dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/tvTimeAgo"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

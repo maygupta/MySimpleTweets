@@ -96,4 +96,5 @@ public class TwitterClient extends OAuthBaseClient {
 	public void resetTweetsCount() {
 		tweetsLoaded = tweetsCount;
 	}
+
 }
