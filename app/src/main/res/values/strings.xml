@@ -15,4 +15,5 @@
     <color name="medium_green">#3d853e</color>
     <color name="light_green">#3c2ae668</color>
     <color name="twitter_blue">#00aced</color>
+    <string name="title_activity_tweet_detail">Tweet</string>
 </resources>

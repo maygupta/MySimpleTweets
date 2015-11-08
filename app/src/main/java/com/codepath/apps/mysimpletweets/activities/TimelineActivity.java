@@ -2,6 +2,7 @@ package com.codepath.apps.mysimpletweets.activities;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -12,8 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.activeandroid.query.Select;
 import com.codepath.apps.mysimpletweets.R;
 import com.codepath.apps.mysimpletweets.TwitterApplication;
 import com.codepath.apps.mysimpletweets.TwitterClient;
@@ -29,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TimelineActivity extends AppCompatActivity {
 
@@ -51,6 +56,13 @@ public class TimelineActivity extends AppCompatActivity {
         adapter = new TweetsArrayAdapter(this, tweets);
         lvTweets.setAdapter(adapter);
 
+        client = TwitterApplication.getRestClient();
+
+        setupViews();
+        populateTimeline();
+    }
+
+    public void setupViews() {
         lvTweets.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
@@ -60,10 +72,8 @@ public class TimelineActivity extends AppCompatActivity {
         });
 
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
-
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
             @Override
             public void onRefresh() {
                 // Your code to refresh the list here.
@@ -74,20 +84,27 @@ public class TimelineActivity extends AppCompatActivity {
         });
 
         // Configure the refreshing colors
-
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        client = TwitterApplication.getRestClient();
-        populateTimeline();
+        lvTweets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Tweet tweet = tweets.get(position);
+                Bundle args = new Bundle();
+                Intent i = new Intent(TimelineActivity.this, TweetDetailActivity.class);
+                i.putExtra("tweet", tweet);
+                startActivity(i);
+            }
+        });
     }
 
     public void fetchTimelineAsync() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers,JSONArray response) {
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 // Remember to CLEAR OUT old items before appending in the new ones
                 adapter.clear();
                 // ...the data has come back, add new items to your adapter...
@@ -95,6 +112,7 @@ public class TimelineActivity extends AppCompatActivity {
                 // Now we call setRefreshing(false) to signal refresh has finished
                 adapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
+                client.resetTweetsCount();
             }
 
             @Override
@@ -117,19 +135,33 @@ public class TimelineActivity extends AppCompatActivity {
     // Send an API request to Twitter
     // Fill the listview
     private void populateTimeline() {
+
+        if (isNetworkAvailable() == false) {
+            loadTweetsFromStore();
+            return;
+        }
+
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 adapter.addAll(Tweet.fromJSONArray(response));
                 adapter.notifyDataSetChanged();
                 client.updateTweetsCount();
+                client.lastId = Tweet.getLastTweetId(response);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Log.d("ERROR", "Failed to get tweets homeline");
+                Log.d("ERROR", errorResponse.toString());
             }
         });
+    }
+
+    private void loadTweetsFromStore() {
+        List<Tweet> queryResults = new Select().from(Tweet.class).execute();
+        adapter.addAll(queryResults);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -141,9 +173,6 @@ public class TimelineActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement

@@ -29,6 +29,7 @@ public class TwitterClient extends OAuthBaseClient {
 	public static final String REST_CALLBACK_URL = "oauth://cpsimpletweets"; // Change this (here and in manifest)
 	public int tweetsCount = 25;
 	public int tweetsLoaded = 0;
+	public long lastId = -1;
 
 	public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
@@ -59,6 +60,9 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("count", tweetsCount);
 		params.put("since_id", 1);
+		if (lastId > 0) {
+			params.put("max_id", lastId);
+		}
 		client.get(apiUrl, params, handler);
 	}
 
@@ -79,5 +83,17 @@ public class TwitterClient extends OAuthBaseClient {
 
 	public void updateTweetsCount() {
 		this.tweetsLoaded += tweetsCount;
+	}
+
+	public void replyToTweet(long id, String replyBody, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/update.json");
+		RequestParams params = new RequestParams();
+		params.put("status", replyBody);
+		params.put("in_reply_to_status_id", id);
+		client.post(apiUrl, params, handler);
+	}
+
+	public void resetTweetsCount() {
+		tweetsLoaded = tweetsCount;
 	}
 }

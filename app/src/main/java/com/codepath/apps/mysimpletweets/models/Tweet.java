@@ -2,10 +2,15 @@ package com.codepath.apps.mysimpletweets.models;
 
 import android.text.format.DateUtils;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,12 +19,24 @@ import java.util.Locale;
 /**
  * Created by maygupta on 11/5/15.
  */
-public class Tweet {
+@Table(name = "Tweets")
+public class Tweet extends Model implements Serializable {
 
+    @Column(name = "body")
     public String body;
+
+    @Column(name = "tweet_id")
     public long id;
+
+    @Column(name = "User")
     public User user;
+
+    @Column(name = "created_at")
     public String createdAt;
+
+    public Tweet() {
+        super();
+    }
 
     public static Tweet fromJSON(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
@@ -28,6 +45,7 @@ public class Tweet {
             tweet.id = jsonObject.getLong("id");
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+            tweet.save();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -62,6 +80,17 @@ public class Tweet {
         }
 
         return relativeDate;
+    }
+
+    public static long getLastTweetId(JSONArray response) {
+        int size = response.length();
+        long retId = 0;
+        try {
+            retId = response.getJSONObject(size-1).getLong("id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return retId;
     }
 }
 
