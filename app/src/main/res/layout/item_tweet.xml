@@ -42,6 +42,8 @@
         android:text="New Text"
         android:layout_alignLeft="@+id/tvUsername"
         android:id="@+id/tvTweet"
+        android:autoLink="all"
+        android:linksClickable="true"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/tvUsername"

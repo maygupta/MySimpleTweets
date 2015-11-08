@@ -62,6 +62,17 @@ public class TwitterClient extends OAuthBaseClient {
 		client.get(apiUrl, params, handler);
 	}
 
+	public void postTweet(String tweetBody, AsyncHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/update.json");
+		RequestParams params = new RequestParams();
+		params.put("status", tweetBody);
+		client.post(apiUrl, params, handler);
+	}
+
+	public  void incrementTweetsCount() {
+		tweetsLoaded++;
+	}
+
 	public int getNumberOfPagesLoaded() {
 		return tweetsLoaded/tweetsCount;
 	}

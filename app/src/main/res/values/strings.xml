@@ -7,6 +7,12 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <color name="black">#000</color>
+    <string name="compose_tweet">Compose Tweet</string>
 
+    <color name="dark_blue">#180065</color>
+    <color name="black">#000</color>
+    <color name="light_blue">#334ee9ff</color>
+    <color name="medium_green">#3d853e</color>
+    <color name="light_green">#3c2ae668</color>
+    <color name="twitter_blue">#00aced</color>
 </resources>
