@@ -141,6 +141,7 @@ public class TimelineActivity extends AppCompatActivity {
                 startActivityForResult(i, TWEET_DETAIL_REQUEST);
             }
         });
+
     }
 
     // Refreshes timeline, clears the adapter and updates with new ones
