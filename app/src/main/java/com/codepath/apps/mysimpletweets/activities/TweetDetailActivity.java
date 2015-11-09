@@ -2,7 +2,6 @@ package com.codepath.apps.mysimpletweets.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.mysimpletweets.R;
-import com.codepath.apps.mysimpletweets.TwitterApplication;
-import com.codepath.apps.mysimpletweets.TwitterClient;
+import com.codepath.apps.mysimpletweets.clients.TwitterApplication;
+import com.codepath.apps.mysimpletweets.clients.TwitterClient;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
@@ -38,7 +37,9 @@ public class TweetDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweet_detail);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.rgb(0, 172, 237)));
+
+        // Set Title color
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(TwitterApplication.TwitterColor()));
 
         Intent intent = getIntent();
         tweet = (Tweet) intent.getSerializableExtra("tweet");
@@ -66,18 +67,14 @@ public class TweetDetailActivity extends AppCompatActivity {
         tvScreenName.setText(tweet.user.getScreeName());
         tvTweetBody.setText(tweet.body);
         tvTimeAgo.setText(tweet.getRelativeTimeAgo());
-        etReply.setHint("Reply to" + " " + tweet.user.name);
+        etReply.setHint(getResources().getString(R.string.reply_to) + " " + tweet.user.name);
 
         etReply.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -102,12 +99,8 @@ public class TweetDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -122,6 +115,7 @@ public class TweetDetailActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     super.onFailure(statusCode, headers, throwable, errorResponse);
+                    finish();
                 }
 
                 @Override

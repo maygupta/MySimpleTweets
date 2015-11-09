@@ -41,7 +41,6 @@ public class ComposeTweetFragment extends DialogFragment {
         // Set title for this dialog
         getDialog().setTitle(R.string.compose_tweet);
         view = inflater.inflate(R.layout.compose_tweet_fragment, null);
-        //populateDialog();
         view.findViewById(R.id.btTweetSave).setOnClickListener(new SaveListener());
         view.findViewById(R.id.btCancel).setOnClickListener(new CancelListener());
         EditText etComposeTweetBody = (EditText) view.findViewById(R.id.etComposeTweetBody);
@@ -49,15 +48,9 @@ public class ComposeTweetFragment extends DialogFragment {
         tvCharacterCount.setText(String.valueOf(MAX_CHARACTERS_COUNT));
         etComposeTweetBody.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
                 updateCounter(s.length());

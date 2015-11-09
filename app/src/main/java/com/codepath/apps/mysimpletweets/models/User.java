@@ -3,6 +3,7 @@ package com.codepath.apps.mysimpletweets.models;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +45,11 @@ public class User extends Model implements Serializable {
         u.save();
         return u;
     }
+
+    // Record Finders
+	public static User byUId(long id) {
+		return new Select().from(User.class).where("uid = ?", id).executeSingle();
+	}
 
     public String getScreeName() {
         return "@" + this.screenName;

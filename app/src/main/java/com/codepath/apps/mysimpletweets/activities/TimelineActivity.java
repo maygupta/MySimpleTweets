@@ -3,11 +3,12 @@ package com.codepath.apps.mysimpletweets.activities;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,9 +21,9 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.codepath.apps.mysimpletweets.R;
-import com.codepath.apps.mysimpletweets.TwitterApplication;
-import com.codepath.apps.mysimpletweets.TwitterClient;
 import com.codepath.apps.mysimpletweets.adapters.TweetsArrayAdapter;
+import com.codepath.apps.mysimpletweets.clients.TwitterApplication;
+import com.codepath.apps.mysimpletweets.clients.TwitterClient;
 import com.codepath.apps.mysimpletweets.fragments.ComposeTweetFragment;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.models.User;
@@ -43,35 +44,51 @@ public class TimelineActivity extends AppCompatActivity {
     private ArrayList<Tweet> tweets;
     private TweetsArrayAdapter adapter;
     private ListView lvTweets;
-    private User currentUser;
     private SwipeRefreshLayout swipeContainer;
     private User loggedInUser;
-    static final int TWEET_DETAIL_REQUEST = 0;
+    private static final int TWEET_DETAIL_REQUEST = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.rgb(0, 172, 237)));
 
+        // Set Title's color to Twitter blue
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(TwitterApplication.TwitterColor()));
+
+        // Setup adapter and list view
         lvTweets = (ListView) findViewById(R.id.lvTweets);
         tweets = new ArrayList<>();
         adapter = new TweetsArrayAdapter(this, tweets);
         lvTweets.setAdapter(adapter);
 
+        // Create Twitter client
         client = TwitterApplication.getRestClient();
 
+        // Setup View listeners and event handles
         setupViews();
+
+        // Populate User timeline
         populateTimeline();
+
+        // Populate Current User
         populateLoggedInUser();
     }
 
+    // Populates logged in user
+    // If no network, find it from database using user id stored in shared prefs
     private void populateLoggedInUser() {
         client.getUserTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 try {
                     loggedInUser = User.fromJSON(response.getJSONObject(0).getJSONObject("user"));
+                    // Store the user in Shared Preferences
+                    SharedPreferences pref = PreferenceManager
+                            .getDefaultSharedPreferences(TimelineActivity.this);
+                    SharedPreferences.Editor edit = pref.edit();
+                    edit.putLong("uid", loggedInUser.uid);
+                    edit.commit();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -79,7 +96,13 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
+                // If no network or failure, lets get the logged in user from share preferences
+                SharedPreferences pref =
+                                PreferenceManager.getDefaultSharedPreferences(TimelineActivity.this);
+                long userId = pref.getLong("uid", -1);
+                if (userId != -1) {
+                    loggedInUser = User.byUId(userId);
+                }
             }
         });
     }
@@ -98,9 +121,6 @@ public class TimelineActivity extends AppCompatActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
                 fetchTimelineAsync();
             }
         });
@@ -111,6 +131,7 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
+        // Set On Tweet click listeners
         lvTweets.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -122,28 +143,27 @@ public class TimelineActivity extends AppCompatActivity {
         });
     }
 
+    // Refreshes timeline, clears the adapter and updates with new ones
     public void fetchTimelineAsync() {
-        client.lastId = -1;
+        client.reset();
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                // Remember to CLEAR OUT old items before appending in the new ones
                 adapter.clear();
-                // ...the data has come back, add new items to your adapter...
-                adapter.addAll(Tweet.fromJSONArray(response));
-                // Now we call setRefreshing(false) to signal refresh has finished
-                adapter.notifyDataSetChanged();
                 swipeContainer.setRefreshing(false);
-                client.resetTweetsCount();
+                postSuccessCallback(response);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Log.d("ERROR", "Failed to get tweets homeline");
+                swipeContainer.setRefreshing(false);
+                Toast.makeText(TimelineActivity.this, "Sorry, Unable to refresh!!", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    // Get Result from TweetDetailActivity
     protected void onActivityResult(int requestCode, int resultCode,
              Intent data) {
          if (requestCode == TWEET_DETAIL_REQUEST && resultCode == RESULT_OK) {
@@ -156,15 +176,14 @@ public class TimelineActivity extends AppCompatActivity {
          }
     }
 
-
     // Append more data into the adapter
     public void customLoadMoreDataFromApi(int offset) {
-      // This method probably sends out a network request and appends new data items to your adapter.
-      // Use the offset value and add it as a parameter to your API request to retrieve paginated data.
-      // Deserialize API response and then construct new objects to append to the adapteri
-      if (client.getNumberOfPagesLoaded() <= offset) {
-          populateTimeline();
-      }
+        if (!isNetworkAvailable()) {
+            return;
+        }
+        if (client.getNumberOfPagesLoaded() <= offset) {
+            populateTimeline();
+        }
     }
 
     // Send an API request to Twitter
@@ -179,10 +198,7 @@ public class TimelineActivity extends AppCompatActivity {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                adapter.addAll(Tweet.fromJSONArray(response));
-                adapter.notifyDataSetChanged();
-                client.updateTweetsCount();
-                client.lastId = Tweet.getLastTweetId(response);
+                postSuccessCallback(response);
             }
 
             @Override
@@ -193,9 +209,17 @@ public class TimelineActivity extends AppCompatActivity {
         });
     }
 
+    private void postSuccessCallback(JSONArray response) {
+        adapter.addAll(Tweet.fromJSONArray(response));
+        adapter.notifyDataSetChanged();
+        client.updateTweetsCount();
+        client.lastId = Tweet.getLastTweetId(response);
+    }
+
+    // Load tweets from persisted data store for good UX
     private void loadTweetsFromStore() {
         Toast.makeText(this, "Loading from Database!!", Toast.LENGTH_SHORT).show();
-        List<Tweet> queryResults = new Select().from(Tweet.class).execute();
+        List<Tweet> queryResults = new Select().from(Tweet.class).orderBy("tweet_id DESC").limit(50).execute();
         adapter.addAll(queryResults);
         adapter.notifyDataSetChanged();
     }

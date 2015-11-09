@@ -3,6 +3,7 @@ package com.codepath.apps.mysimpletweets.models;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,8 +33,13 @@ public class Tweet extends Model implements Serializable {
     @Column(name = "created_at")
     public String createdAt;
 
+    @Column(name = "media_url")
     public String mediaUrl;
+
+    @Column(name = "retweet_count")
     public String retweetCount;
+
+    @Column(name = "favorite_count")
     public String favCount;
 
 
@@ -61,13 +67,27 @@ public class Tweet extends Model implements Serializable {
             }
             tweet.retweetCount = jsonObject.getString("retweet_count");
             tweet.favCount = jsonObject.getString("favorite_count");
-            tweet.save();
+            if (isNewRecord(tweet)) {
+                tweet.save();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         return tweet;
     }
+
+    private static boolean isNewRecord(Tweet t) {
+        if (byTweetId(t.id) != null) {
+            return false;
+        }
+        return true;
+    }
+
+    // Record Finders
+	public static Tweet byTweetId(long id) {
+		return new Select().from(Tweet.class).where("tweet_id = ?", id).executeSingle();
+	}
 
     public static ArrayList<Tweet> fromJSONArray(JSONArray array) {
         ArrayList<Tweet> tweets = new ArrayList<>();
