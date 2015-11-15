@@ -1,6 +1,7 @@
 package com.codepath.apps.mysimpletweets.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.apps.mysimpletweets.R;
+import com.codepath.apps.mysimpletweets.activities.ProfileActivity;
 import com.codepath.apps.mysimpletweets.models.Tweet;
 import com.codepath.apps.mysimpletweets.utils.LinkifiedTextView;
 import com.squareup.picasso.Picasso;
@@ -38,7 +40,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
-        Tweet tweet = getItem(position);
+        final Tweet tweet = getItem(position);
         if(convertView == null) {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet,parent,false);
@@ -64,6 +66,15 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         viewHolder.tvTimeAgo.setText(tweet.getRelativeTimeAgo());
         viewHolder.tvRTCount.setText(tweet.retweetCount);
         viewHolder.tvFavCount.setText(tweet.favCount);
+
+        viewHolder.ivProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getContext(), ProfileActivity.class);
+                i.putExtra("user", tweet.user);
+                getContext().startActivity(i);
+            }
+        });
 
         return convertView;
     }

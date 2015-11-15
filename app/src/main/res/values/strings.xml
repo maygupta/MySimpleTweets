@@ -3,7 +3,7 @@
 
     <string name="app_name">Simple Tweets</string>
     <string name="login_label">Connect to Twitter</string>
-    <string name="title_activity_timeline">Home Timeline</string>
+    <string name="title_activity_timeline"></string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -17,5 +17,7 @@
     <color name="light_green">#3c2ae668</color>
     <color name="white">#ffffff</color>
     <color name="twitter_blue">#00aced</color>
+    <color name="lighter_gray">#9BA8B3</color>
     <string name="title_activity_tweet_detail">Tweet</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 </resources>

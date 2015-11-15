@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.scribe.builder.api.Api;
@@ -57,9 +58,13 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 
 	// User Timeline ENDPOINT
-	public void getUserTimeline(AsyncHttpResponseHandler handler) {
+	public void getUserTimeline(String name, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/user_timeline.json");
-		client.get(apiUrl, handler);
+		RequestParams params = new RequestParams();
+		if (name!= null && !name.isEmpty()) {
+			params.put("screen_name", name);
+		}
+		client.get(apiUrl, params, handler);
 	}
 
 	public void postTweet(String tweetBody, AsyncHttpResponseHandler handler) {
@@ -67,10 +72,6 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("status", tweetBody);
 		client.post(apiUrl, params, handler);
-	}
-
-	public void incrementTweetsCount() {
-		tweetsLoaded++;
 	}
 
 	public int getNumberOfPagesLoaded() {
@@ -92,5 +93,17 @@ public class TwitterClient extends OAuthBaseClient {
 	public void reset() {
 		lastId = -1;
 		tweetsLoaded = 0;
+	}
+
+	public void getMentionsTimeline(JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+		RequestParams params = new RequestParams();
+		params.put("count", tweetsCount);
+		client.get(apiUrl, params, handler);
+	}
+
+	public void getUserInfo(JsonHttpResponseHandler handler) {
+		String apiUrl = getApiUrl("account/verify_credentials.json");
+		client.get(apiUrl, handler);
 	}
 }

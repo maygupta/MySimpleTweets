@@ -32,6 +32,7 @@
         android:text="New Text"
         android:id="@+id/tvScreenName"
         android:textSize="10dp"
+        android:textColor="@color/lighter_gray"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="15dp"
         android:layout_alignParentTop="true"
@@ -60,6 +61,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
+        android:textColor="@color/lighter_gray"
         android:id="@+id/tvTimeAgo"
         />
 
@@ -68,17 +70,23 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tvRTCount"
-        android:drawableLeft="@drawable/rt"
+        android:textColor="@color/lighter_gray"
         android:paddingLeft="5dp"
         android:layout_alignTop="@+id/tvRT"
         android:layout_centerHorizontal="true" />
+    <ImageView
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:src="@drawable/rt"
+        android:layout_toLeftOf="@id/tvRTCount"
+        android:layout_alignTop="@+id/tvRT"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/tvFavCount"
-        android:drawableLeft="@drawable/fav"
+        android:textColor="@color/lighter_gray"
         android:layout_alignTop="@+id/tvRTCount"
         android:layout_toLeftOf="@+id/tvTimeAgo"
         android:layout_toStartOf="@+id/tvTimeAgo"
@@ -86,17 +94,34 @@
         android:paddingLeft="5dp"
         android:layout_marginEnd="42dp" />
 
+    <ImageView
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:src="@drawable/fav"
+        android:layout_toLeftOf="@id/tvFavCount"
+        android:layout_alignTop="@+id/tvRT"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
         android:id="@+id/tvRT"
-        android:drawableLeft="@drawable/reply"
+        android:textColor="@color/lighter_gray"
         android:layout_marginTop="47dp"
         android:paddingLeft="5dp"
         android:layout_below="@+id/ivProfile"
         android:layout_toRightOf="@+id/ivProfile"
         android:layout_toEndOf="@+id/ivProfile" />
+
+    <ImageView
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:src="@drawable/reply"
+        android:layout_alignTop="@+id/tvRT"
+        android:layout_toRightOf="@+id/tvRT"
+        android:layout_toEndOf="@+id/tvRT" />
+
+
 
 
 </RelativeLayout>

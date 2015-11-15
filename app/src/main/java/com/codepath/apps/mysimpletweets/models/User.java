@@ -28,6 +28,18 @@ public class User extends Model implements Serializable {
     @Column(name = "profile_url")
     public String profileImageUrl;
 
+    @Column(name = "background_url")
+    public String backgroundUrl;
+
+    @Column(name = "followers")
+    public int followers;
+
+    @Column(name = "following")
+    public int following;
+
+    @Column(name = "statuses_count")
+    public int statusCount;
+
     public User(){
         super();
     }
@@ -39,6 +51,10 @@ public class User extends Model implements Serializable {
             u.uid = jsonObject.getLong("id");
             u.screenName = jsonObject.getString("screen_name");
             u.profileImageUrl = jsonObject.getString("profile_image_url");
+            u.backgroundUrl = jsonObject.getString("profile_background_image_url");
+            u.statusCount = jsonObject.getInt("statuses_count");
+            u.followers = jsonObject.getInt("followers_count");
+            u.following = jsonObject.getInt("friends_count");
         } catch (JSONException e) {
             e.printStackTrace();
         }

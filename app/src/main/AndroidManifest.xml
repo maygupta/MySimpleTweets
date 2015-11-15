@@ -48,14 +48,16 @@
                     android:scheme="oauth" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.TimelineActivity"
-            android:label="@string/title_activity_timeline" >
+        <activity android:name=".activities.TimelineActivity" >
         </activity>
         <activity
             android:name=".activities.TweetDetailActivity"
-            android:parentActivityName=".activities.TimelineActivity"
-            android:label="@string/title_activity_tweet_detail" >
+            android:label="@string/title_activity_tweet_detail"
+            android:parentActivityName=".activities.TimelineActivity" >
+        </activity>
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:label="@string/title_activity_profile" >
         </activity>
     </application>
 
