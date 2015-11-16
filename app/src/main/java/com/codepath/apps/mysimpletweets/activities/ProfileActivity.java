@@ -55,8 +55,8 @@ public class ProfileActivity extends AppCompatActivity {
         Picasso.with(this).load(Uri.parse(user.profileImageUrl)).into(ivProfile);
         tvUsername.setText(user.name);
         tvScreenName.setText(user.getScreeName());
-        tvFollowingCount.setText(Html.fromHtml("FOLLOWERS <br>" + user.following));
-        tvFollowersCount.setText(Html.fromHtml("FOLLOWING <br>" + user.followers));
+        tvFollowingCount.setText(Html.fromHtml("FOLLOWERS <br>" + user.followers));
+        tvFollowersCount.setText(Html.fromHtml("FOLLOWING <br>" + user.following));
         tvTweetsCount.setText(Html.fromHtml("TWEETS <br>" + user.statusCount));
     }
 

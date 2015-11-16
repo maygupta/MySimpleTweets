@@ -16,7 +16,7 @@
        android:layout_height="50dp"
        android:id="@+id/ivProfile"
         android:layout_marginTop="-20dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/ivBackground"
        />
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/tvUsername"
         android:text="New Text"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
         android:layout_below="@+id/ivProfile"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -36,17 +36,27 @@
         android:layout_height="wrap_content"
         android:id="@+id/tvScreenName"
         android:text="New Text"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
         android:textColor="@color/lighter_gray"
         android:layout_below="@+id/tvUsername"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0.2dp"
+        android:layout_below="@id/tvScreenName"
+        android:layout_marginTop="10dp"
+             android:id="@+id/separator1"
+            android:visibility="visible"
+            android:background="@android:color/darker_gray"/>
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvScreenName"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:weightSum="1.0"
         android:id="@+id/linearLayout">
@@ -55,23 +65,40 @@
             android:layout_height="wrap_content"
             android:id="@+id/tvTweetsCount"
             android:text="New Text"
-            android:layout_weight="0.3"
+            android:paddingTop="5dp"
+            android:layout_weight="0.25"
+            android:textColor="@color/twitter_blue"
             />
+        <View
+            android:layout_width="0.1dp"
+            android:layout_height="40dp"
+             android:id="@+id/separator2"
+            android:visibility="visible"
+            android:background="@android:color/darker_gray"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tvFollowersCount"
             android:text="New Text"
+            android:paddingTop="5dp"
             android:layout_toRightOf="@id/tvTweetsCount"
             android:layout_marginLeft="20dp"
             android:layout_weight="0.3"
             />
+        <View
+            android:layout_width="0.1dp"
+            android:layout_height="40dp"
+             android:id="@+id/separator"
+            android:visibility="visible"
+            android:background="@android:color/darker_gray"/>
 
         <TextView
             android:layout_weight="0.3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tvFollowingCount"
+            android:paddingTop="5dp"
             android:text="New Text"
             android:layout_toRightOf="@id/tvFollowersCount"
             android:layout_marginLeft="20dp"
@@ -80,11 +107,11 @@
 
     </LinearLayout>
 
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignLeft="@+id/linearLayout"
-        android:layout_alignStart="@+id/linearLayout"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:id="@+id/flContainer"
         android:layout_below="@+id/linearLayout"></FrameLayout>

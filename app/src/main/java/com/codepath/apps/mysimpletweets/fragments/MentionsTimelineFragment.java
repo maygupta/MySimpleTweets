@@ -17,8 +17,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
     // Refreshes timeline, clears the adapter and updates with new ones
     @Override
     public void fetchTimelineAsync() {
-        client.reset();
-        client.getMentionsTimeline(new JsonHttpResponseHandler() {
+        client.getMentionsTimeline(-1, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 adapter.clear();
@@ -42,7 +41,12 @@ public class MentionsTimelineFragment extends TweetsListFragment {
             return;
         }
 
-        client.getMentionsTimeline(new JsonHttpResponseHandler() {
+        long maxId = -1;
+        if(tweets.size() > 0) {
+            maxId = tweets.get(tweets.size() - 1).id;
+        }
+
+        client.getMentionsTimeline(maxId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 postSuccessCallback(response);

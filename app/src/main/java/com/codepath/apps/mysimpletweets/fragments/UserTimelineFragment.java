@@ -26,8 +26,7 @@ public class UserTimelineFragment extends TweetsListFragment {
     @Override
     public void fetchTimelineAsync() {
         String userScreenName = getArguments().getString("screen_name");
-        client.reset();
-        client.getUserTimeline(userScreenName, new JsonHttpResponseHandler() {
+        client.getUserTimeline(-1, userScreenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 adapter.clear();
@@ -51,8 +50,13 @@ public class UserTimelineFragment extends TweetsListFragment {
             return;
         }
         String userScreenName = getArguments().getString("screen_name");
+        long maxId = -1;
+        if(tweets.size() > 0) {
+            maxId = tweets.get(tweets.size() - 1).id;
+        }
 
-        client.getUserTimeline(userScreenName, new JsonHttpResponseHandler() {
+
+        client.getUserTimeline(maxId, userScreenName, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 postSuccessCallback(response);

@@ -64,9 +64,7 @@ public abstract class TweetsListFragment extends Fragment {
         if (!isNetworkAvailable()) {
             return;
         }
-        if (client.getNumberOfPagesLoaded() <= offset) {
-            populateTimeline();
-        }
+        populateTimeline();
     }
 
     public void setupViews(View v) {
@@ -115,8 +113,6 @@ public abstract class TweetsListFragment extends Fragment {
     protected void postSuccessCallback(JSONArray response) {
         adapter.addAll(Tweet.fromJSONArray(response));
         adapter.notifyDataSetChanged();
-        client.updateTweetsCount();
-        client.lastId = Tweet.getLastTweetId(response);
     }
 
     // Load tweets from persisted data store for good UX

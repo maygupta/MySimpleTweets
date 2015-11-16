@@ -29,8 +29,6 @@ public class TwitterClient extends OAuthBaseClient {
 	public static final String REST_CONSUMER_SECRET = "w4GHRxNfnW4KPtQ3J9hv6Me4PknD14aUOAqSDFOr5xyFsPoFVT";
 	public static final String REST_CALLBACK_URL = "oauth://cpsimpletweets"; // Change this (here and in manifest)
 	public int tweetsCount = 25;
-	public int tweetsLoaded = 0;
-	public long lastId = -1;
 
 	public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
@@ -46,23 +44,26 @@ public class TwitterClient extends OAuthBaseClient {
 	 */
 
 	// Home Timeline ENDPOINT
-	public void getHomeTimeline(AsyncHttpResponseHandler handler) {
+	public void getHomeTimeline(long maxId, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		RequestParams params = new RequestParams();
 		params.put("count", tweetsCount);
 		params.put("since_id", 1);
-		if (lastId > 0) {
-			params.put("max_id", lastId);
+		if (maxId > 0) {
+			params.put("max_id", maxId);
 		}
 		client.get(apiUrl, params, handler);
 	}
 
 	// User Timeline ENDPOINT
-	public void getUserTimeline(String name, AsyncHttpResponseHandler handler) {
+	public void getUserTimeline(long maxId, String name, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/user_timeline.json");
 		RequestParams params = new RequestParams();
 		if (name!= null && !name.isEmpty()) {
 			params.put("screen_name", name);
+		}
+		if (maxId > 0) {
+			params.put("max_id", maxId);
 		}
 		client.get(apiUrl, params, handler);
 	}
@@ -74,14 +75,6 @@ public class TwitterClient extends OAuthBaseClient {
 		client.post(apiUrl, params, handler);
 	}
 
-	public int getNumberOfPagesLoaded() {
-		return tweetsLoaded/tweetsCount;
-	}
-
-	public void updateTweetsCount() {
-		this.tweetsLoaded += tweetsCount;
-	}
-
 	public void replyToTweet(long id, String replyBody, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/update.json");
 		RequestParams params = new RequestParams();
@@ -90,14 +83,12 @@ public class TwitterClient extends OAuthBaseClient {
 		client.post(apiUrl, params, handler);
 	}
 
-	public void reset() {
-		lastId = -1;
-		tweetsLoaded = 0;
-	}
-
-	public void getMentionsTimeline(JsonHttpResponseHandler handler) {
+	public void getMentionsTimeline(long maxId, JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/mentions_timeline.json");
 		RequestParams params = new RequestParams();
+		if (maxId > 0) {
+			params.put("max_id", maxId);
+		}
 		params.put("count", tweetsCount);
 		client.get(apiUrl, params, handler);
 	}

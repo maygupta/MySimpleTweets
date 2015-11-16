@@ -1,10 +1,6 @@
 package com.codepath.apps.mysimpletweets.fragments;
 
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -21,8 +17,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
     // Refreshes timeline, clears the adapter and updates with new ones
     @Override
     public void fetchTimelineAsync() {
-        client.reset();
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        client.getHomeTimeline(-1, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 adapter.clear();
@@ -46,7 +41,12 @@ public class HomeTimelineFragment extends TweetsListFragment {
             return;
         }
 
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        long maxId = -1;
+        if(tweets.size() > 0) {
+            maxId = tweets.get(tweets.size() - 1).id;
+        }
+
+        client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 postSuccessCallback(response);

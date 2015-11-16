@@ -137,16 +137,5 @@ public class Tweet extends Model implements Serializable {
 
         return timePresenter;
     }
-
-    public static long getLastTweetId(JSONArray response) {
-        int size = response.length();
-        long retId = 0;
-        try {
-            retId = response.getJSONObject(size-1).getLong("id");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return retId;
-    }
 }
 
