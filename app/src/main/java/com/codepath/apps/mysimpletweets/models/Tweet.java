@@ -42,6 +42,7 @@ public class Tweet extends Model implements Serializable {
     @Column(name = "favorite_count")
     public String favCount;
 
+    public boolean favorited;
 
     public Tweet() {
         super();
@@ -67,6 +68,7 @@ public class Tweet extends Model implements Serializable {
             }
             tweet.retweetCount = jsonObject.getString("retweet_count");
             tweet.favCount = jsonObject.getString("favorite_count");
+            tweet.favorited = jsonObject.getBoolean("favorited");
             if (isNewRecord(tweet)) {
                 tweet.save();
             }

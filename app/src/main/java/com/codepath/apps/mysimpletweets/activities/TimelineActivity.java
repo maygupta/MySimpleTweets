@@ -8,13 +8,16 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.codepath.apps.mysimpletweets.R;
@@ -36,7 +39,7 @@ public class TimelineActivity extends AppCompatActivity {
     TwitterClient client;
     User loggedInUser;
     HomeTimelineFragment tweetsListFragment;
-    Toolbar toolbar;
+    LinearLayout linlaHeaderProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,8 @@ public class TimelineActivity extends AppCompatActivity {
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabStrip.setViewPager(vpPager);
 
+        linlaHeaderProgress = (LinearLayout) findViewById(R.id.linlaHeaderProgress);
+
         populateLoggedInUser();
     }
 
@@ -74,18 +79,47 @@ public class TimelineActivity extends AppCompatActivity {
          }
     }
 
+
+    public void showProgressBar() {
+        // Show progress item
+        linlaHeaderProgress.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        linlaHeaderProgress.setVisibility(View.GONE);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_timeline, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent i = new Intent(TimelineActivity.this, SearchActivity.class);
+                i.putExtra("query", query);
+                startActivity(i);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         return true;
     }
 
      private void populateLoggedInUser() {
+         showProgressBar();
         client.getUserInfo(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("RESPONSe", response.toString());
                 loggedInUser = User.fromJSON(response);
                 // Store the user in Shared Preferences
                 SharedPreferences pref = PreferenceManager
@@ -93,6 +127,7 @@ public class TimelineActivity extends AppCompatActivity {
                 SharedPreferences.Editor edit = pref.edit();
                 edit.putLong("uid", loggedInUser.uid);
                 edit.commit();
+                hideProgressBar();
             }
 
             @Override
@@ -104,6 +139,7 @@ public class TimelineActivity extends AppCompatActivity {
                 if (userId != -1) {
                     loggedInUser = User.byUId(userId);
                 }
+                hideProgressBar();
             }
         });
     }
@@ -120,20 +156,24 @@ public class TimelineActivity extends AppCompatActivity {
             args.putString("username", loggedInUser.name);
             args.putString("screen_name", loggedInUser.getScreeName());
             args.putString("image_url", loggedInUser.profileImageUrl);
+            args.putString("fragment_title", "Reply");
             fragment.setArguments(args);
             fragment.setDialogResultHandler(new ComposeTweetFragment.OnDialogResultHandler() {
                 @Override
                 public void finish(String tweetBody) {
+                    showProgressBar();
                     // Save the tweet, show it on top
                     client.postTweet(tweetBody, new JsonHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                             tweetsListFragment.fetchTimelineAsync();
+                            hideProgressBar();
                         }
 
                         @Override
                         public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                             Log.d("ERROR", "Failed to get tweets homeline");
+                            hideProgressBar();
                         }
                     });
                 }

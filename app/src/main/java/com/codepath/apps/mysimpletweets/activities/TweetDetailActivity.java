@@ -23,6 +23,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class TweetDetailActivity extends AppCompatActivity {
@@ -57,6 +58,49 @@ public class TweetDetailActivity extends AppCompatActivity {
         TextView tvTimeAgo = (TextView) findViewById(R.id.tvTimeAgo);
         tvCharCount = (TextView) findViewById(R.id.tvCharCount);
         etReply = (EditText) findViewById(R.id.etReply);
+
+        final ImageView ivFav = (ImageView) findViewById(R.id.ivFav);
+        if(tweet.favorited) {
+            ivFav.setImageDrawable(getResources().getDrawable(R.drawable.fav_1));
+        }
+
+        ivFav.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(tweet.favorited) {
+                    ivFav.setImageDrawable(getResources().getDrawable(R.drawable.unfav));
+                    client.unlike(tweet.id, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                            tweet.favorited = false;
+                            super.onSuccess(statusCode, headers, response);
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            tweet.favorited = false;
+                            super.onFailure(statusCode, headers, responseString, throwable);
+                        }
+                    });
+                } else {
+                    ivFav.setImageDrawable(getResources().getDrawable(R.drawable.fav_1));
+                    client.like(tweet.id, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                            tweet.favorited = true;
+                            super.onSuccess(statusCode, headers, response);
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            tweet.favorited = true;
+                            super.onFailure(statusCode, headers, responseString, throwable);
+                        }
+                    });
+                }
+            }
+        });
 
         Picasso.with(this).load(tweet.user.profileImageUrl).into(ivProfileImage);
         if (tweet.mediaUrl != null) {

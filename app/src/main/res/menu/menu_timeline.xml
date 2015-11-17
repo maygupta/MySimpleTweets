@@ -5,7 +5,7 @@
 
     <item android:id="@+id/action_compose"
         app:showAsAction="always"
-        android:orderInCategory="50"
+        android:orderInCategory="75"
         android:icon="@drawable/tweet"
         android:title="Compose">
     </item>
@@ -24,4 +24,11 @@
         android:icon="@drawable/tweet_home"
         android:title="Home">
     </item>
+
+     <item android:id="@+id/action_search"
+        android:orderInCategory="50"
+        android:title="Search"
+        android:icon="@drawable/search"
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
 </menu>

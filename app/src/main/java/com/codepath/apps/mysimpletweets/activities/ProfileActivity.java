@@ -25,6 +25,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView tvTweetsCount;
     TextView tvFollowersCount;
     TextView tvFollowingCount;
+    TextView tvTagline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,9 @@ public class ProfileActivity extends AppCompatActivity {
         tvFollowingCount.setText(Html.fromHtml("FOLLOWERS <br>" + user.followers));
         tvFollowersCount.setText(Html.fromHtml("FOLLOWING <br>" + user.following));
         tvTweetsCount.setText(Html.fromHtml("TWEETS <br>" + user.statusCount));
+        if(user.tagline != null && !user.tagline.isEmpty()) {
+            tvTagline.setText(user.tagline);
+        }
     }
 
     private void setupViews() {
@@ -68,6 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
         tvTweetsCount = (TextView) findViewById(R.id.tvTweetsCount);
         tvFollowersCount = (TextView) findViewById(R.id.tvFollowersCount);
         tvFollowingCount = (TextView) findViewById(R.id.tvFollowingCount);
+        tvTagline = (TextView) findViewById(R.id.tvTagline);
     }
 
     @Override

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.codepath.apps.mysimpletweets.R;
@@ -100,6 +101,7 @@ public abstract class TweetsListFragment extends Fragment {
                 startActivityForResult(i, TWEET_DETAIL_REQUEST);
             }
         });
+
     }
 
     protected Boolean isNetworkAvailable() {
@@ -116,7 +118,7 @@ public abstract class TweetsListFragment extends Fragment {
 
     // Load tweets from persisted data store for good UX
     protected void loadTweetsFromStore() {
-//        Toast.makeText(getActivity(), "Loading from Database!!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Loading from Database!!", Toast.LENGTH_SHORT).show();
         List<Tweet> queryResults = new Select().from(Tweet.class).orderBy("tweet_id DESC").limit(50).execute();
         adapter.addAll(queryResults);
         adapter.notifyDataSetChanged();

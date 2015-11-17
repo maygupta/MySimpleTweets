@@ -41,6 +41,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
             return;
         }
 
+
         long maxId = -1;
         if(tweets.size() > 0) {
             maxId = tweets.get(tweets.size() - 1).id;

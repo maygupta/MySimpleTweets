@@ -117,6 +117,7 @@
         android:layout_width="17dp"
         android:layout_height="17dp"
         android:src="@drawable/reply"
+        android:id="@+id/ivReply"
         android:layout_alignTop="@+id/tvRT"
         android:layout_toRightOf="@+id/tvRT"
         android:layout_toEndOf="@+id/tvRT" />

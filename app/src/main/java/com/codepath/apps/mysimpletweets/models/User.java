@@ -40,6 +40,8 @@ public class User extends Model implements Serializable {
     @Column(name = "statuses_count")
     public int statusCount;
 
+    public String tagline;
+
     public User(){
         super();
     }
@@ -55,6 +57,7 @@ public class User extends Model implements Serializable {
             u.statusCount = jsonObject.getInt("statuses_count");
             u.followers = jsonObject.getInt("followers_count");
             u.following = jsonObject.getInt("friends_count");
+            u.tagline = jsonObject.getString("description");
         } catch (JSONException e) {
             e.printStackTrace();
         }

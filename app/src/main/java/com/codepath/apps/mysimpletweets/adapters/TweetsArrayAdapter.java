@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
+    private ReplyClickListener replyClickListener;
+
     private static class ViewHolder {
         LinkifiedTextView tvTweet;
         TextView tvUsername;
@@ -31,6 +33,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         TextView tvRTCount;
         TextView tvFavCount;
         ImageView ivProfile;
+        ImageView reply;
     }
 
     public TweetsArrayAdapter(Context context, List<Tweet> tweets) {
@@ -54,6 +57,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder.tvFavCount = (TextView) convertView.findViewById(R.id.tvFavCount);
 
             viewHolder.ivProfile = (ImageView) convertView.findViewById(R.id.ivProfile);
+            viewHolder.reply = (ImageView) convertView.findViewById(R.id.ivReply);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -78,4 +82,14 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
 
         return convertView;
     }
+
+    public void setReplyListener(ReplyClickListener listener) {
+        replyClickListener = listener;
+    }
+
+    public interface ReplyClickListener {
+        public void onClick(Tweet tweet);
+    }
+
+
 }

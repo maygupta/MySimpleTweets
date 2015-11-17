@@ -104,4 +104,14 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:id="@+id/ivFav"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/unfav"
+        android:layout_below="@+id/tvScreenName"
+        android:layout_toRightOf="@+id/ivTweetProfileImage"
+        android:layout_toEndOf="@+id/ivTweetProfileImage" />
+
 </RelativeLayout>
