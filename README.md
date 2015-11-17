@@ -46,6 +46,10 @@ Here's a walkthrough of implemented user stories:
 
 <img src='https://github.com/maygupta/MySimpleTweets/blob/master/twitter_2.gif' title='Normal flow' width='' alt='Video Walkthrough' />
 
+## Video Walkthrough 2
+
+When API's rate is limited, it loads the tweets from DB
+
 <img src='https://github.com/maygupta/MySimpleTweets/blob/master/twitter_4.gif' title='Without network flow' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
