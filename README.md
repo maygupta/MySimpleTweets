@@ -44,7 +44,9 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://github.com/maygupta/MySimpleTweets/blob/master/twitter_2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/maygupta/MySimpleTweets/blob/master/twitter_2.gif' title='Normal flow' width='' alt='Video Walkthrough' />
+
+<img src='https://github.com/maygupta/MySimpleTweets/blob/master/twitter_4.gif' title='Without network flow' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
