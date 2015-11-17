@@ -44,7 +44,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://github.com/maygupta/MySimpleTweets/blob/master/twitter_2.gif' title='Normal flow' width='' alt='Video Walkthrough' />
+<img src='https://github.com/maygupta/MySimpleTweets/blob/master/twitter_5.gif' title='Normal flow' width='' alt='Video Walkthrough' />
 
 ## Video Walkthrough 2
 
